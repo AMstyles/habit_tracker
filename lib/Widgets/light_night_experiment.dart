@@ -35,7 +35,7 @@ class SwitcherMini extends StatefulWidget {
 }
 
 class _SwitcherMiniState extends State<SwitcherMini> {
-  @override
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeController>(context);
@@ -44,7 +44,6 @@ class _SwitcherMiniState extends State<SwitcherMini> {
         onStateChanged: (newBool) {
           final provider = Provider.of<ThemeController>(context, listen: false);
           provider.toggleDark();
-
           widget.callback();
         });
   }

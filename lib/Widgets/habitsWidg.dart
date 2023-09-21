@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/Models/colors.dart';
 import 'package:habit_tracker/Models/habit.dart';
 import 'package:habit_tracker/Pages/habit_page.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:habit_tracker/feedBacks/haptics.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 
 // ignore: must_be_immutable
 class HabitWidg extends StatefulWidget {
@@ -251,3 +251,5 @@ class _HabitWidgState extends State<HabitWidg> with TickerProviderStateMixin {
     _timer!.cancel();
   }
 }
+
+

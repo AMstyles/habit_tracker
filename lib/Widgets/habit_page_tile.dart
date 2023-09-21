@@ -5,7 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/Models/colors.dart';
 import 'package:habit_tracker/Models/habit.dart';
 import 'package:habit_tracker/Pages/habit_page.dart';
-import 'package:habit_tracker/Pages/weather.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 // ignore: must_be_immutable

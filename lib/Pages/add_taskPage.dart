@@ -5,7 +5,7 @@ import 'package:habit_tracker/Models/colors.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskPage extends StatefulWidget {
-  AddTaskPage({Key? key}) : super(key: key);
+  const AddTaskPage({Key? key}) : super(key: key);
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -148,16 +148,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "08:20",
                           style: TextStyle(fontSize: 20, color: Colors.pink),
                         ),
                         CupertinoButton(
                           onPressed: pickTime,
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 30,
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: const Icon(CupertinoIcons.clock,
+                            backgroundColor: Colors.blue,
+                            child: Icon(CupertinoIcons.clock,
                                 size: 35, color: Colors.white),
                           ),
                         ),
@@ -169,7 +169,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Container(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.circular(30),
@@ -177,16 +177,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "20 - 08 -2022",
                           style: TextStyle(fontSize: 20, color: Colors.pink),
                         ),
                         CupertinoButton(
                           onPressed: pickDate,
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 30,
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: const Icon(
+                            backgroundColor: Colors.blue,
+                            child: Icon(
                               CupertinoIcons.calendar,
                               size: 35,
                               color: Colors.white,
@@ -200,7 +200,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Container(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     decoration: BoxDecoration(
                       color: Theme.of(context).backgroundColor,
                       borderRadius: BorderRadius.circular(30),
@@ -208,16 +208,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Notifications?",
                           style: TextStyle(fontSize: 20, color: Colors.pink),
                         ),
                         CupertinoButton(
                           onPressed: () {},
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 30,
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: const Icon(CupertinoIcons.bell,
+                            backgroundColor: Colors.blue,
+                            child: Icon(CupertinoIcons.bell,
                                 size: 35, color: Colors.white),
                           ),
                         ),
@@ -243,10 +243,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         ),
                         CupertinoButton(
                           onPressed: showColorPicke,
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 30,
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: const Icon(CupertinoIcons.bell,
+                            backgroundColor: Colors.blue,
+                            child: Icon(CupertinoIcons.bell,
                                 size: 35, color: Colors.white),
                           ),
                         ),

@@ -19,7 +19,7 @@ class _HabitPageState extends State<MainHabitPage> {
   void initState() {
     // TODO: implement initState
 
-    Future.delayed(Duration(seconds: 8), () {
+    Future.delayed(const Duration(seconds: 8), () {
       setState(() {
         isLoading = true;
       });
@@ -48,11 +48,11 @@ class _HabitPageState extends State<MainHabitPage> {
                       fit: BoxFit.cover,
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
+                : const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
+                      children: [
                         CircularProgressIndicator.adaptive(),
                         Text('wait for it...'),
                       ],
@@ -115,7 +115,7 @@ class _HabitPageState extends State<MainHabitPage> {
   Widget createAnimation() {
     bool flag = false;
     Timer timer = Timer.periodic(
-      Duration(seconds: 5),
+      const Duration(seconds: 5),
       (timer) {
         if (cheat > 0) {
           cheat--;

@@ -58,7 +58,7 @@ class _HabitsState extends State<Habits> with TickerProviderStateMixin {
             pinned: true,
             elevation: 0,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            expandedHeight: 300,
+            expandedHeight: MediaQuery.of(context).size.height * 0.35,
             flexibleSpace: const FlexibleSpaceBar(
               stretchModes: [StretchMode.fadeTitle, StretchMode.zoomBackground],
               centerTitle: true,

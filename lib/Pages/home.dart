@@ -1,20 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:habit_tracker/Models/dark_light.dart';
 import 'package:habit_tracker/Models/habit.dart';
-import 'package:habit_tracker/Models/reminder.dart';
-import 'package:habit_tracker/Pages/add_taskPage.dart';
-import 'package:habit_tracker/Pages/focusPage.dart';
-import 'package:habit_tracker/Pages/remiders_page.dart';
-import 'package:habit_tracker/Pages/weather.dart';
+import 'package:habit_tracker/Models/task.dart';
 import 'package:habit_tracker/Widgets/habitsWidg.dart';
-import 'package:habit_tracker/Widgets/home_task_tile.dart';
 import 'package:habit_tracker/Widgets/light_night_experiment.dart';
+import 'package:habit_tracker/Widgets/task_widget.dart';
+import 'package:habit_tracker/database/database.dart';
+import 'package:habit_tracker/formatters/date_time_formatters.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as Rive;
 import 'package:sticky_headers/sticky_headers/widget.dart';
+import '../sheets/add_task_sheet.dart';
+import 'add_taskPage.dart';
+import 'focusPage.dart';
 import 'habits_page.dart';
-import 'package:animated_page_transition/animated_page_transition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,9 +28,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  int currIndex = 0;
+
   late String time;
-  late Rive.RiveAnimationController statecontroller;
+  late Rive.RiveAnimationController stateController;
 
   late Rive.StateMachineController? _controller;
   late Rive.SMIInput<bool>? isDark;
@@ -38,7 +41,11 @@ class _HomePageState extends State<HomePage>
     if (controller != null) {
       artboard.addController(controller);
       isDark = controller.findInput('isDark');
-      isDark!.value = false;
+
+      var brightness = SchedulerBinding.instance.window.platformBrightness;
+      bool isDarkMode = brightness == Brightness.dark;
+
+      isDark!.value = Provider.of<ThemeController>(context, listen: false).isDark;
     }
   }
 
@@ -46,17 +53,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
 
-    int now = TimeOfDay.now().hour;
-
-    if (now >= 5 && now < 12) {
-      time = 'Good Morning,';
-    } else if (now >= 12 && now < 18) {
-      time = 'Good Afternoon';
-    } else if (now >= 18 && now < 24) {
-      time = 'Good evening,';
-    } else {
-      time = "Late night,";
-    }
+    time = TimeHelper.getPartOfDay();
   }
 
   @override
@@ -65,91 +62,61 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  final Color _color = Colors.red;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*drawer: SafeArea(
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30),
-                  bottomRight: Radius.circular(30))),
-          child: Drawer(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DrawerHeader(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset('lib/Assets/XTlabel.png'),
-                        const Text(
-                          "E X P E R I M E N T A L",
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text(
-                      'ThemeMode',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    Switcher(),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      )*/
-      floatingActionButton: SpeedDial(
-        animationDuration: const Duration(milliseconds: 150),
-        animationCurve: Curves.easeInOutCubic,
-        overlayColor: Colors.black,
-        backgroundColor: CupertinoColors.activeBlue,
-        activeBackgroundColor: CupertinoColors.destructiveRed,
-        activeIcon: CupertinoIcons.clear,
-        icon: CupertinoIcons.add,
-        spacing: 10,
-        children: [
-          SpeedDialChild(
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => AddTaskPage())),
-              child: const Icon(CupertinoIcons.calendar_badge_plus),
-              label: 'Task'),
-          SpeedDialChild(
-              onTap: () {},
-              child: Icon(CupertinoIcons.clock),
-              label: 'Timed Habit'),
-          SpeedDialChild(
-              onTap: (() {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => FocusPage()));
-              }),
-              child: const Hero(
-                  tag: 'focus', child: Icon(Icons.self_improvement_rounded)),
-              label: 'Start focus period'),
-        ],
-      ),
-      //backgroundColor: CupertinoColors.lightBackgroundGray,
 
-      body: CustomScrollView(
+      // floatingActionButton:Builder(builder: (BuildContext context) =>
+      //    SpeedDial(
+      //     animationDuration: const Duration(milliseconds: 150),
+      //     animationCurve: Curves.easeInOutCubic,
+      //     overlayColor: Colors.black,
+      //     backgroundColor: CupertinoColors.activeBlue,
+      //     activeBackgroundColor: CupertinoColors.destructiveRed,
+      //     activeIcon: CupertinoIcons.clear,
+      //     icon: CupertinoIcons.add,
+      //     spacing: 10,
+      //     children: [
+      //       SpeedDialChild(
+      //           onTap: (){
+      //             Scaffold.of(context).showBottomSheet(
+      // backgroundColor: Colors.transparent,
+      //                     enableDrag: true,
+      //                     (context) => const AddTaskSheet()
+      //
+      //             );
+      //           },
+      //           child: const Icon(CupertinoIcons.calendar_badge_plus),
+      //           label: 'Task'),
+      //       SpeedDialChild(
+      //           onTap: () {},
+      //           child: const Icon(CupertinoIcons.clock),
+      //           label: 'Timed Habit'),
+      //       SpeedDialChild(
+      //           onTap: (() {
+      //             Navigator.of(context)
+      //                 .push(MaterialPageRoute(builder: (context) => FocusPage()));
+      //           }),
+      //           child: const Hero(
+      //               tag: 'focus', child: Icon(Icons.self_improvement_rounded)),
+      //           label: 'Start focus period'),
+      //     ],
+      //   ),
+      //),
+      floatingActionButton: FloatingActionButton(onPressed: () {  },
+        child: Text("add"),
+      ),
+
+
+
+      body:Builder(builder: (BuildContext context) {
+     return CustomScrollView(
         slivers: [
           //The top row name and shit
-
           SliverAppBar(
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: Colors.blue,
             collapsedHeight: 80,
             primary: true,
             actions: [
@@ -262,6 +229,7 @@ class _HomePageState extends State<HomePage>
           //ListViews of the actual habits
 
           //Tasks text and shit
+
           SliverToBoxAdapter(
             child: StickyHeader(
               overlapHeaders: true,
@@ -282,53 +250,35 @@ class _HomePageState extends State<HomePage>
                           Icons.arrow_forward_ios,
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const HabitPage()));
+                         // Scaffold.of(context).showBottomSheet((context) => Container(height: 300,));
                         })
                   ],
                 ),
               ),
-              content: ListView.builder(
-                shrinkWrap: true,
-                itemCount: reminders.length,
-                physics: const ClampingScrollPhysics(),
-                itemBuilder: ((context, index) {
-                  return HomeTaskTile(
-                    index: index,
-                  );
-                }),
-              ),
+              content: FutureBuilder(
+                future: Database.getAllTasks(),
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, int index) {
+                        return TaskWidget(
+                          task: snapshot.data[index],
+                        );
+                      });
+                  }
+                  return const Center(child: CircularProgressIndicator.adaptive(),);
+                },
+
+              )
             ),
           )
         ],
-      ),
+      );
+      },),
     );
   }
 
-//! functions and sheet widgets
-
-  void openAddTask() {}
-
-  Widget buildSheet() {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController noteController = TextEditingController();
-
-    ValueNotifier<String> name = ValueNotifier<String>('New Task');
-    late DateTime date;
-    String? description;
-    Color remColor = Colors.blue;
-
-    return DraggableScrollableSheet(
-      initialChildSize: 0.9,
-      builder: (_, scrollController) => Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(15)),
-          child: const Text('wtf')),
-    );
-  }
-
-  bool? playBool = false;
-
-  ValueNotifier<Color> myColor = ValueNotifier<Color>(Colors.blue);
 }
